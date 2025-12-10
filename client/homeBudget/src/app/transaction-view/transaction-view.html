@@ -1,0 +1,10 @@
+
+<div class="box" [style.--bg-color]="category()?.color">
+    <h3>{{transaction()?.name}}</h3>
+    <p>{{transaction()?.date}}</p>
+    <p>Kategoria: {{category()?.name}}</p>
+    <p><strong>Kwota: {{transaction()?.value}}</strong></p>
+    <p>{{transaction()?.description}}</p>
+    <button>Edytuj</button>
+    <button>Usuń</button>
+</div>

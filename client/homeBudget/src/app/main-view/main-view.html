@@ -1,0 +1,30 @@
+<h3>Miesiąc: {{month}}</h3>
+<h3>Rok: {{year}}</h3>
+
+<div class="container">
+
+    <h3>Transakcje:</h3>
+    <div class="box">
+        @for (t of transactions; track $index){
+        <app-transaction-view [transaction]=t [category]=getCategory(t.category_id)></app-transaction-view>
+        }
+
+</div>
+
+<div class="column">
+    <h3>Kategorie</h3>
+    <div class="small-box">
+        @for (cat of categories; track $index){
+            <p >{{cat.name}}</p>
+        }
+    </div>
+
+
+    <h3>Limity</h3>
+    <div class="small-box">
+        @for (l of limits; track $index){
+            <p>{{getCategory(l.category_id).name}}: {{l.value}}</p>
+        }
+    </div>
+</div>
+</div>

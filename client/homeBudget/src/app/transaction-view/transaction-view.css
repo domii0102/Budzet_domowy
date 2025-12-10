@@ -1,0 +1,8 @@
+.box {
+  border: 1px solid #ccc;
+  width: 16rem;
+  background-color: var(--bg-color);
+  border-radius: 6px;
+  padding: 8px;
+  margin: 8px 8px;
+}

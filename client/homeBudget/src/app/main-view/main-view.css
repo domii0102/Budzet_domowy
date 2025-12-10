@@ -1,0 +1,31 @@
+.box {
+  border: 1px solid #ccc;
+  background-color: #cecccc;
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: row;
+  margin: 8px;
+}
+
+.small-box {
+  border: 1px solid #ccc;
+  background-color: #cecccc;
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  margin: 8px;
+}
+.container {
+    
+    width: 100%;
+    display: flex;
+
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    margin: 8px;
+}

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const categorySchema = new mongoose.Schema({
     name: {type: String, required: true},
-    color: {type: String, enum:["#FE6F6F", "#6FD0FE", "#736FFE", "#FE6FC2", "#4ADB42", "#FEAA6F"]}
+    color: {type: String, enum:["#fe6f6f", "#6fd0fe", "#736ffe", "#fe6fc2", "#4adb42", "#feaa6f"]}
 })
 
 export const Category = mongoose.Model("Category", categorySchema);

@@ -1,0 +1,35 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  background: #333;
+  color: #fff;
+  padding: 16px;
+}
+
+.footer {
+  background: #333;
+  color: #fff;
+  padding: 12px;
+  margin-top: auto; /* przykleja stopkę do dołu */
+}
+
+main {
+  display: flex;
+  flex: 1;
+}
+
+.sidebar {
+  width: 200px;
+  background: #f2f2f2;
+  padding: 16px;
+}
+
+.content {
+  flex: 1;
+  padding: 16px;
+  background: #fff;
+}
