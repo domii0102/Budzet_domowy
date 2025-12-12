@@ -11,4 +11,4 @@ const transactionSchema = new mongoose.Schema({
     description: {type: String, required:false}
 })
 
-export const Transaction = mongoose.Model("Transaction", transactionSchema);
+export const Transaction = mongoose.model("Transaction", transactionSchema);

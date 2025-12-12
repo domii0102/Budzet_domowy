@@ -9,4 +9,4 @@ const limitSchema = new mongoose.Schema({
     year: {type: Number, required:true}
 })
 
-export const Limit = mongoose.Model("Limit", limitSchema);
+export const Limit = mongoose.model("Limit", limitSchema);
