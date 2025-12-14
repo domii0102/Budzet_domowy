@@ -1,30 +1,79 @@
-<h3>Miesiąc: {{month}}</h3>
-<h3>Rok: {{year}}</h3>
+<div class="page">
+  <h1 class="title">BudgetApp</h1>
 
-<div class="container">
+  <div class="monthbar">
+  <button class="nav-btn" type="button" (click)="prevMonth()">‹</button>
 
-    <h3>Transakcje:</h3>
-    <div class="box">
-        @for (t of transactions; track $index){
-        <app-transaction-view [transaction]=t [category]=getCategory(t.category_id)></app-transaction-view>
-        }
+  <select class="select month" [(ngModel)]="month" (change)="reload()">
+    <option *ngFor="let m of months; let i = index" [ngValue]="i">
+      {{ i + 1 }} - {{ m }}
+    </option>
+  </select>
 
+  <select class="select year" [(ngModel)]="year" (change)="reload()">
+    <option *ngFor="let y of years" [ngValue]="y">{{ y }}</option>
+  </select>
+
+  <button class="nav-btn" type="button" (click)="nextMonth()">›</button>
 </div>
 
-<div class="column">
-    <h3>Kategorie</h3>
-    <div class="small-box">
-        @for (cat of categories; track $index){
-            <p >{{cat.name}}</p>
-        }
-    </div>
 
+  <div class="layout">
+    <!-- TRANSAKCJE -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Transactions</h2>
+        <button class="action" type="button" (click)="openAddTransaction()">
+          Add Transaction <span>+</span>
+        </button>
+        <button class="action" type="button" (click)="openAddCategory()">
+  Add Category <span>+</span>
+</button>
 
-    <h3>Limity</h3>
-    <div class="small-box">
-        @for (l of limits; track $index){
-            <p>{{getCategory(l.category_id).name}}: {{l.value}}</p>
-        }
-    </div>
-</div>
+      </div>
+
+      <div class="cards">
+        <article
+          class="card"
+          *ngFor="let t of transactions"
+          [style.background]="getCategory(t.category_id)?.color || '#4aa3ff'"
+        >
+          <div class="card-title">{{ t.name }}</div>
+
+          <div class="muted">
+            Date: {{ t.date ? (t.date | date:'dd.MM.yyyy') : '-' }}
+          </div>
+
+          <div class="price">\${{ t.value }}</div>
+
+          <div class="muted">
+            Category: {{ getCategory(t.category_id)?.name || '-' }}
+          </div>
+
+          <div class="muted" *ngIf="t.description">
+            Description: {{ t.description }}
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- LIMITY -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Budget limits</h2>
+        <button class="action" type="button" (click)="openAddLimit()">
+          Add Limit <span>+</span>
+        </button>
+      </div>
+
+      <div class="limits">
+        <div class="limit" *ngFor="let l of limits">
+          <div class="limit-name">
+            {{ getCategory(l.category_id)?.name || '-' }}
+          </div>
+          <div class="limit-value">\${{ l.value }}</div>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
