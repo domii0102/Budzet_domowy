@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Transaction } from '../../models/Transaction';
+import { FormsModule } from '@angular/forms';
 import { Category, Color } from '../../models/Category';
 import { TransactionView } from '../transaction-view/transaction-view';
 import {Limit} from '../../models/Limit';
 
 @Component({
   selector: 'app-main-view',
-  imports: [TransactionView],
+  imports: [TransactionView, FormsModule, CommonModule],
   templateUrl: './main-view.html',
   styleUrl: './main-view.css',
 })
@@ -25,14 +27,32 @@ export class MainView {
   limits: Limit[] = [new Limit("444", 400, "bbb", 11, 2025)]
 
   constructor() {
-    this.month = this.today.getMonth();
-    this.year = this.today.getFullYear();
-  }
+    this.month = this.today.getMonth(); 
+    this.year = this.today.getFullYear();
+  }
 
-  getCategory(id: string): Category {
-    return  this.categories.find(c => c.id === id)!;
-  }
-
+  getCategory(id: string): Category {
+    return  this.categories.find(c => c.id === id)!;
+  }
   
- 
+  getMonthName(monthIndex: number): string {
+    const date = new Date(this.year, monthIndex);
+    return date.toLocaleString('en-US', { month: 'long' }); 
+  }
+  previousMonth() {
+    this.month--;
+    if (this.month < 0) {
+      this.month = 11;
+      this.year--;
+    }
+  }
+
+  nextMonth() {
+    this.month++;
+    if (this.month > 11) {
+      this.month = 0;
+      this.year++;
+    }
+  
+  }
 }
