@@ -1,44 +1,30 @@
-<div class="date-selection-container">
-  <div class="date-selector-bar">
-    <button class="arrow-btn" (click)="previousMonth()">&lt;</button>
-    <select class="date-select" [(ngModel)]="month">
-      <option value="{{month}}">{{ getMonthName(month) }}</option>
-      </select>
-    <select class="date-select" [(ngModel)]="year">
-      <option value="{{year}}">{{ year }}</option>
-      </select>
-    <button class="arrow-btn" (click)="nextMonth()">&gt;</button>
-  </div>
+<h3>Miesiąc: {{month}}</h3>
+<h3>Rok: {{year}}</h3>
+
+<div class="container">
+
+    <h3>Transakcje:</h3>
+    <div class="box">
+        @for (t of transactions; track $index){
+        <app-transaction-view [transaction]=t [category]=getCategory(t.category_id)></app-transaction-view>
+        }
+
 </div>
 
-<div class="main-content-wrapper">
-
-  <div class="transactions-panel">
-    <div class="panel-header">
-      <h3>Transactions</h3>
-      <button class="add-button">Add Transaction <span class="plus-icon">+</span></button>
+<div class="column">
+    <h3>Kategorie</h3>
+    <div class="small-box">
+        @for (cat of categories; track $index){
+            <p >{{cat.name}}</p>
+        }
     </div>
 
-    <div class="transactions-grid-container">
-      @for (t of transactions; track t.id){
-        <app-transaction-view [transaction]="t" [category]="getCategory(t.category_id)"></app-transaction-view>
-      }
-    </div>
-  </div>
 
-  <div class="limits-panel">
-    <div class="panel-header">
-      <h3>Budget limits</h3>
-      <button class="add-button">Add Limit <span class="plus-icon">+</span></button>
+    <h3>Limity</h3>
+    <div class="small-box">
+        @for (l of limits; track $index){
+            <p>{{getCategory(l.category_id).name}}: {{l.value}}</p>
+        }
     </div>
-
-    <div class="limits-list">
-      @for (l of limits; track l.id){
-        <div class="limit-item">
-          <span class="limit-category">{{ getCategory(l.category_id).name }}:</span>
-          <span class="limit-value green-text">${{ l.value | number : '1.2-2' }}</span>
-        </div>
-      }
-    </div>
-  </div>
+</div>
 </div>
