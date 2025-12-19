@@ -27,8 +27,8 @@
           Add Transaction <span>+</span>
         </button>
         <button class="action" type="button" (click)="openAddCategory()">
-  Add Category <span>+</span>
-</button>
+          Add Category <span>+</span>
+        </button>
 
       </div>
 
@@ -44,7 +44,7 @@
             Date: {{ t.date ? (t.date | date:'dd.MM.yyyy') : '-' }}
           </div>
 
-          <div class="price">\${{ t.value }}</div>
+          <div class="price">${{ t.value }}</div>
 
           <div class="muted">
             Category: {{ getCategory(t.category_id)?.name || '-' }}
@@ -61,7 +61,7 @@
     <section class="panel">
       <div class="panel-header">
         <h2>Budget limits</h2>
-        <button class="action" type="button" (click)="openAddLimit()">
+        <button class="action" type="button">
           Add Limit <span>+</span>
         </button>
       </div>
@@ -76,4 +76,19 @@
       </div>
     </section>
   </div>
+
+</div>
+<div *ngIf="isCategoryModalOpen" class="overlay-backdrop">
+  <app-add-category-view
+    (save)="handleSaveCategory($event)"
+    (close)="closeAddCategory()"
+  ></app-add-category-view>
+</div>
+
+<div *ngIf="isTransactionModalOpen" class="overlay-backdrop">
+  <app-add-transaction-view
+    [categories]="categories"
+    (save)="handleSaveTransaction($event)"
+    (close)="closeAddTransaction()"
+  ></app-add-transaction-view>
 </div>

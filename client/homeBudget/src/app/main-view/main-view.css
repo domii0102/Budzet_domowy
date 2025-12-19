@@ -1,4 +1,14 @@
-.page { padding: 24px; font-family: Arial, sans-serif; }
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.page { 
+  padding: 24px; 
+  font-family: Arial, sans-serif; 
+  width: 96vw; 
+  box-sizing: border-box; 
+ }
 .title { margin: 0 0 14px; font-size: 22px; font-weight: 700; }
 
 .monthbar {
@@ -29,27 +39,33 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 1.3fr 1fr;
-  gap: 18px;
+  width: 100%;
+  grid-template-columns: 2.2fr 0.8fr;
+  gap: 30px;
 }
 
 .panel {
   border: 1px solid #eee;
   border-radius: 18px;
-  padding: 14px;
+  padding: 20px;
   background: #fff;
   min-height: 520px;
+  width: 100%;
 }
-
 .panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 12px;
 }
+.panel-header .action:first-of-type {
+  margin-left: auto; 
+}
 
+.panel-header .action {
+  margin-left: 8px; 
+}
 .panel-header h2 { margin: 0; font-size: 16px; }
-
 .action {
   border: 0;
   border-radius: 10px;
@@ -64,7 +80,7 @@
 
 .cards {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   gap: 14px;
   margin-top: 8px;
 }
@@ -73,6 +89,8 @@
   border-radius: 16px;
   padding: 16px;
   color: #fff;
+  width: 100%;
+  max-width: 210px;
   min-height: 150px;
 }
 

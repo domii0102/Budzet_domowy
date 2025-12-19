@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 
 import { BudgetApiService } from '../services/budget-api.service';
 import { TransactionView } from '../transaction-view/transaction-view';
+import { AddCategoryView } from '../add-category-view/add-category-view';
+import { AddTransactionView } from '../add-transaction-view/add-transaction-view';
 
 @Component({
   selector: 'app-main-view',
-  imports: [CommonModule, TransactionView, FormsModule, DatePipe],
+  imports: [CommonModule, TransactionView, FormsModule, DatePipe, AddCategoryView, AddTransactionView],
   templateUrl: './main-view.html',
   styleUrl: './main-view.css',
 })
@@ -16,7 +18,7 @@ export class MainView implements OnInit {
   month: number;
   year: number;
   today = new Date();
-
+  isSaving = false;  //Flaga blokująca ponowne zapisanie do bazy 
   months: string[] = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -31,6 +33,9 @@ export class MainView implements OnInit {
   categories: any[] = [];
   transactions: any[] = [];
   limits: any[] = [];
+
+  isTransactionModalOpen = false;
+  isCategoryModalOpen = false;
 
   constructor(
     private api: BudgetApiService,
@@ -86,63 +91,67 @@ export class MainView implements OnInit {
   }
 
   openAddCategory(): void {
-    const name = prompt('Nazwa kategorii:');
-    if (!name) return;
+    this.isCategoryModalOpen = true;
+  }
+  closeAddCategory(): void {
+    if (!this.isSaving) {
+      this.isCategoryModalOpen = false;
+    }
+  }
+  handleSaveCategory(data: any): void {
+    if (this.isSaving) return;
+    this.isSaving = true;
 
-    // dozwolone kolory z backendu (Zod)
-    const allowedColors = ['#fe6f6f', '#6fd0fe'];
-
-    const color = prompt(
-      'Kolor (wklej jeden z dozwolonych):\n' + allowedColors.join(', '),
-      allowedColors[0]
-    );
-    if (!color) return;
-
-    this.api.addCategory({ name, color }).subscribe({
-      next: () => this.reload(),
-      error: (e) =>
-        console.log('ADD CATEGORY ERROR:', e?.error?.error?.fieldErrors),
+    this.api.addCategory(data).subscribe({
+      next: () => {
+        this.reload();
+        this.isCategoryModalOpen = false;
+        this.isSaving = false;
+        this.cdr.detectChanges(); 
+  },
+      error: (e) =>{ console.error('ADD CATEGORY ERROR:', e);
+      alert('An error occurred while adding the category.');
+      this.isSaving = false;
+      this.cdr.detectChanges();
+      }
     });
   }
 
   openAddTransaction(): void {
-    const categoryId = this.categories?.[0]?._id;
-    if (!categoryId) {
-      alert('Nie ma kategorii w bazie. Dodaj kategorię najpierw.');
-      return;
+    if (this.categories.length === 0) {
+        alert('No categories available. Please add a category first.');
+        return;
     }
-
-    const name = prompt('Nazwa transakcji:');
-    if (!name) return;
-
-    const valueStr = prompt('Kwota:');
-    const value = Number(valueStr);
-    if (Number.isNaN(value)) {
-      alert('Niepoprawna kwota');
-      return;
+    this.isTransactionModalOpen = true;
+  }
+  closeAddTransaction(): void {
+    if (!this.isSaving) {
+      this.isTransactionModalOpen = false;
     }
+  }
 
-    const defaultDate = new Date().toISOString().slice(0, 10);
-    const dateStr = prompt('Data (YYYY-MM-DD):', defaultDate);
-    if (!dateStr) return;
+  handleSaveTransaction(data: any): void {
+    if (this.isSaving) return; 
+    this.isSaving = true;
 
-    const dt = new Date(dateStr);
-    if (isNaN(dt.getTime())) {
-      alert('Niepoprawna data');
-      return;
-    }
+    console.log('New transaction data:', data);
+    const payload = { ...data, description: data.description || '' };
 
-    this.api.addTransaction({
-      name,
-      value,
-      date: dt.toISOString(),
-      category_id: categoryId,
-      description: '',
-    }).subscribe({
-      next: () => this.reload(),
-      error: (e) => console.log('ADD TRANSACTION ERROR:', e?.error),
+    this.api.addTransaction(payload).subscribe({
+      next: () => {
+        this.reload();
+        this.isTransactionModalOpen = false;
+        this.isSaving = false;
+        this.cdr.detectChanges(); 
+      },
+      error: (e) => {
+        console.log('ADD TRANSACTION ERROR:', e?.error);
+        this.isSaving = false;
+        this.cdr.detectChanges();
+      },
     });
   }
 
   openAddLimit(): void {}
-}
+    
+} 

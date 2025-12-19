@@ -1,0 +1,36 @@
+<div class="modal-backdrop" (click)="onCancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <h2>Add Transaction</h2>
+
+    <div class="form-group">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="formData.name" placeholder="e.g. Shopping">
+    </div>
+
+    <div class="form-group">
+      <label>Price:</label>
+      <input type="number" [(ngModel)]="formData.value" placeholder="0.00">
+    </div>
+
+    <div class="form-group">
+      <label>Date:</label>
+      <input type="date" [(ngModel)]="formData.date">
+    </div>
+
+    <div class="form-group">
+    <label>Category</label>
+    <select [(ngModel)]="formData.category_id" class="input-field select-field">
+      <option value="" disabled selected>Select a category</option>
+      <option *ngFor="let cat of categories()" [value]="cat._id">
+        {{ cat.name }}
+      </option>
+    </select>
+  </div>
+
+    <div class="actions">
+      <button class="btn-cancel" (click)="onCancel()">Anuluj</button>
+      <button class="btn-save" (click)="onSubmit()">Dodaj</button>
+    </div>
+
+  </div>
+</div>

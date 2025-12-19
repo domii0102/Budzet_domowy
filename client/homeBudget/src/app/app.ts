@@ -9,5 +9,5 @@ import { MainView } from './main-view/main-view';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('Budżet domowy');
+  protected readonly title = signal('BudgetApp');
 }
