@@ -12,7 +12,7 @@ import { Limit, newLimit } from '../../models/Limit';
 
 @Component({
   selector: 'app-main-view',
-  imports: [CommonModule, TransactionView, FormsModule, DatePipe, AddCategoryView, AddTransactionView],
+  imports: [CommonModule, TransactionView, FormsModule, AddCategoryView, AddTransactionView],
   templateUrl: './main-view.html',
   styleUrl: './main-view.css',
 })
@@ -38,6 +38,10 @@ export class MainView implements OnInit {
   isTransactionModalOpen: boolean = false;
   isCategoryModalOpen: boolean = false;
   isSaving: boolean = false;
+
+  sideContent: string = 'limits';
+  limitsButtonIsDisabled: boolean = true;
+  categoriesButtonIsDisabled: boolean = false;
 
   api: BudgetApiService = inject(BudgetApiService);
   cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
@@ -157,5 +161,17 @@ export class MainView implements OnInit {
   }
 
   openAddLimit(): void {}
-    
-} 
+  
+
+  changeSideContent(): void {
+    if (this.sideContent === 'limits') {
+      this.sideContent = 'categories';
+      this.limitsButtonIsDisabled = false;
+      this.categoriesButtonIsDisabled = true;
+    } else {
+      this.sideContent = 'limits';
+      this.limitsButtonIsDisabled = true;
+      this.categoriesButtonIsDisabled = false;
+    }
+  }
+}

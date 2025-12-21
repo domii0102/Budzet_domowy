@@ -77,6 +77,10 @@ html, body {
 }
 
 .action span { font-weight: 800; margin-left: 6px; }
+.action:disabled {
+  background: #929292;
+  cursor: default;
+}
 
 .cards {
   display: grid;
@@ -108,6 +112,15 @@ html, body {
   padding: 14px 12px;
   border: 1px solid #f0f0f0;
 }
+.category {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 14px;
+  padding: 14px 12px;
+  border: 1px solid #f0f0f0;
+}
+
 .select.month { min-width: 140px; }
 .select.year  { min-width: 90px; }
 
@@ -116,3 +129,13 @@ html, body {
 .monthbar { position: relative; z-index: 2; }
 .select { pointer-events: auto; z-index: 3; position: relative; }
 .nav-btn { pointer-events: auto; z-index: 3; position: relative; }
+
+.color-square {
+  width: 25px;
+  height: 25px;
+  border-radius: 8px; 
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}

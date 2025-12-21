@@ -51,21 +51,50 @@
     <section class="panel">
       <div class="panel-header">
         <h2>Budget limits</h2>
+        <button class="action" type="button" (click)="changeSideContent()"
+          [disabled]="limitsButtonIsDisabled">
+          Limits
+        </button>
+        <button class="action" type="button" (click)="changeSideContent()"
+          [disabled]="categoriesButtonIsDisabled">
+          Categories
+        </button>
+        @if (sideContent ==='limits') {
         <button class="action" type="button">
           Add Limit <span>+</span>
         </button>
+      } 
+        @else if (sideContent ==='categories') {
+        <button class="action" type="button" (click)="openAddCategory()">
+          Add Category <span>+</span>
+        </button>
+      }
       </div>
 
       <div class="limits">
-        <div class="limit">
+        @if (sideContent ==='limits') {
           @for (l of limits; track $index) {
+            <div class="limit">
               <div class="limit-name">
             {{ getCategory(l.category_id)?.name || '-' }}
           </div>
-          <div class="limit-value">\${{ l.value }}</div>
+          <div class="limit-value">${{ l.value }}</div>
+          </div>
           }
           
-        </div>
+        
+      } 
+      @else if (sideContent ==='categories') {
+          @for (c of categories; track $index) {
+            <div class="category">
+              <div class="limit-name">
+            {{ c.name || '-' }}
+            </div>
+            <div class="color-square" [style.background]="c.color || '#4aa3ff'"></div>
+          </div>
+          }
+          
+      }
       </div>
     </section>
   </div>
