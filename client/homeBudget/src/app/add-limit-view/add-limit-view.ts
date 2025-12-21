@@ -3,36 +3,42 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators} from '@angular
 import { CommonModule } from '@angular/common';
 import { Category } from '../../models/Category';
 
-
 @Component({
-  selector: 'app-add-transaction-view',
-  standalone: true,
+  selector: 'app-add-limit-view',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './add-transaction-view.html',
-  styleUrl: './add-transaction-view.css',
+  templateUrl: './add-limit-view.html',
+  styleUrl: './add-limit-view.css',
 })
-export class AddTransactionView {
+export class AddLimitView {
+
   categories = input.required<Category[]>();
   save = output<any>();
   close = output<void>();
   errorMessage: string | null = null;
 
-  transactionForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    value: new FormControl('', [Validators.required, Validators.min(0.01)]),
-    date: new FormControl(new Date().toISOString().slice(0,10), Validators.required),
-    category_id: new FormControl('', Validators.required),
-  });
+  months: string[] = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
 
+  limitForm = new FormGroup({
+    value: new FormControl('', [Validators.required, Validators.min(0.01)]),
+    category_id: new FormControl('', Validators.required),
+    month: new FormControl(new Date().getMonth(), [Validators.required, Validators.min(0), Validators.max(11)]),
+    year: new FormControl(new Date().getFullYear(), [Validators.required, Validators.min(2000)]),
+  })
 
   onSubmit() {
-   if (this.transactionForm.invalid) {
+   if (this.limitForm.invalid) {
       this.errorMessage = 'Please fill in all fields.';
       return;
     }
-    this.save.emit(this.transactionForm.value);
+    this.save.emit(this.limitForm.value);
   }
+
   onCancel() {
     this.close.emit();
   }
+
+
 }

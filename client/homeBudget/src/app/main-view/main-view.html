@@ -32,9 +32,7 @@
         <button class="action" type="button" (click)="openAddTransaction()">
           Add Transaction <span>+</span>
         </button>
-        <button class="action" type="button" (click)="openAddCategory()">
-          Add Category <span>+</span>
-        </button>
+
 
       </div>
 
@@ -50,7 +48,12 @@
 
     <section class="panel">
       <div class="panel-header">
+        @if (sideContent ==='limits') {
         <h2>Budget limits</h2>
+        }
+        @else if (sideContent ==='categories') {
+          <h2>Categories</h2>
+        }
         <button class="action" type="button" (click)="changeSideContent()"
           [disabled]="limitsButtonIsDisabled">
           Limits
@@ -60,7 +63,7 @@
           Categories
         </button>
         @if (sideContent ==='limits') {
-        <button class="action" type="button">
+        <button class="action" type="button" (click)="openAddLimit()">
           Add Limit <span>+</span>
         </button>
       } 
@@ -116,5 +119,15 @@
     (save)="handleSaveTransaction($event)"
     (close)="closeAddTransaction()"
   ></app-add-transaction-view>
+</div>
+}
+
+@if (isLimitModalOpen){
+<div class="overlay-backdrop">
+  <app-add-limit-view
+    [categories]="categories"
+    (save)="handleSaveLimit($event)"
+    (close)="closeAddLimit()"
+  ></app-add-limit-view>
 </div>
 }

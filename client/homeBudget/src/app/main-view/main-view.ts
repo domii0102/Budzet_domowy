@@ -6,13 +6,14 @@ import { BudgetApiService } from '../services/budget-api.service';
 import { TransactionView } from '../transaction-view/transaction-view';
 import { AddCategoryView } from '../add-category-view/add-category-view';
 import { AddTransactionView } from '../add-transaction-view/add-transaction-view';
+import { AddLimitView } from '../add-limit-view/add-limit-view';
 import { Category, newCategory } from '../../models/Category';
 import { Transaction, newTransaction } from '../../models/Transaction';
 import { Limit, newLimit } from '../../models/Limit';
 
 @Component({
   selector: 'app-main-view',
-  imports: [CommonModule, TransactionView, FormsModule, AddCategoryView, AddTransactionView],
+  imports: [CommonModule, TransactionView, FormsModule, AddCategoryView, AddTransactionView, AddLimitView],
   templateUrl: './main-view.html',
   styleUrl: './main-view.css',
 })
@@ -37,6 +38,7 @@ export class MainView implements OnInit {
 
   isTransactionModalOpen: boolean = false;
   isCategoryModalOpen: boolean = false;
+  isLimitModalOpen: boolean = false;
   isSaving: boolean = false;
 
   sideContent: string = 'limits';
@@ -160,7 +162,40 @@ export class MainView implements OnInit {
     });
   }
 
-  openAddLimit(): void {}
+  openAddLimit(): void {
+    if (this.categories.length === 0) {
+        alert('No categories available. Please add a category first.');
+        return;
+    }
+    this.isLimitModalOpen = true;
+  }
+  closeAddLimit(): void {
+    if (!this.isSaving) {
+      this.isLimitModalOpen = false;
+    }
+  }
+
+  handleSaveLimit(data: newLimit): void {
+    if (this.isSaving) return; 
+    this.isSaving = true;
+
+    console.log('New limit data:', data);
+    const payload = { ...data};
+
+    this.api.addLimit(payload).subscribe({
+      next: () => {
+        this.reload();
+        this.isLimitModalOpen = false;
+        this.isSaving = false;
+        this.cdr.detectChanges(); 
+      },
+      error: (e) => {
+        console.log('ADD LIMIT ERROR:', e?.error);
+        this.isSaving = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
   
 
   changeSideContent(): void {
