@@ -132,3 +132,10 @@ button:active {
 .btn-save:hover {
   background: #2563eb;
 }
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.875rem;
+  text-align: center;
+  margin-top: 8px;
+}

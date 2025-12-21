@@ -2,35 +2,42 @@
   <div class="modal-content" (click)="$event.stopPropagation()">
     <h2>Add Category</h2>
 
+    <form [formGroup]="categoryForm">
     <div class="form-group">
         <label>Name</label>
-        <input 
-        type="text" 
-        [(ngModel)]="formData.name" 
-        placeholder="e.g. Groceries" 
-        class="input-field"
-        (keydown.enter)="onSubmit()"
-        />
+        <input type="text" formControlName="name" placeholder="e.g. Groceries" class="input-field" (keydown.enter)="onSubmit()" required/>
     </div>
 
     <div class="form-group">
         <label>Color</label>
         <div class="colors-row">
-        <div 
-            *ngFor="let c of allowedColors" 
+        
+        @for (c of allowedColors; track $index) {
+            <div 
             class="color-square"
             [style.background-color]="c"
-            [class.selected]="formData.color === c"
+            [class.selected]="categoryForm.get('color')?.value === c"
             (click)="selectColor(c)"
-        >
-            <span *ngIf="formData.color === c" class="check-icon">✓</span>
+            >
+            @if (categoryForm.get('color')?.value === c) {
+                <span class="check-icon">✓</span>
+        }
+
         </div>
+    }
         </div>
+    </div>
+    @if (errorMessage!==null) {
+        <div class="error-message">{{errorMessage}}</div>
+    }
+    <div>
+
     </div>
 
     <div class="actions">
         <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
         <button type="button" class="btn-save" (click)="onSubmit()">Save</button>
     </div>
+    </form>
     </div>
     </div>

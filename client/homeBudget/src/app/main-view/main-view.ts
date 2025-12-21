@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -6,6 +6,9 @@ import { BudgetApiService } from '../services/budget-api.service';
 import { TransactionView } from '../transaction-view/transaction-view';
 import { AddCategoryView } from '../add-category-view/add-category-view';
 import { AddTransactionView } from '../add-transaction-view/add-transaction-view';
+import { Category, newCategory } from '../../models/Category';
+import { Transaction, newTransaction } from '../../models/Transaction';
+import { Limit, newLimit } from '../../models/Limit';
 
 @Component({
   selector: 'app-main-view',
@@ -18,10 +21,9 @@ export class MainView implements OnInit {
   month: number;
   year: number;
   today = new Date();
-  isSaving = false;  //Flaga blokująca ponowne zapisanie do bazy 
   months: string[] = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
   ];
 
   years: number[] = Array.from(
@@ -29,28 +31,28 @@ export class MainView implements OnInit {
     (_, i) => this.today.getFullYear() - 5 + i
   );
 
-  // tylko dane z backendu – zero "na sztywno"
-  categories: any[] = [];
-  transactions: any[] = [];
-  limits: any[] = [];
+  categories: Category[] = [];
+  transactions: Transaction[] = [];
+  limits: Limit[] = [];
 
-  isTransactionModalOpen = false;
-  isCategoryModalOpen = false;
+  isTransactionModalOpen: boolean = false;
+  isCategoryModalOpen: boolean = false;
+  isSaving: boolean = false;
 
-  constructor(
-    private api: BudgetApiService,
-    private cdr: ChangeDetectorRef   
-  ) {
+  api: BudgetApiService = inject(BudgetApiService);
+  cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+  constructor() {
     this.month = this.today.getMonth();
     this.year = this.today.getFullYear();
   }
 
   ngOnInit(): void {
-    this.reload(); //  ładowanie danych po wejściu na stronę
+    this.reload();
   }
 
-  getCategory(id: string): any {
-    return this.categories.find((c: any) => c._id === id);
+  getCategory(id: string): Category | undefined {
+    return this.categories.find((c: Category) => c._id === id);
   }
 
   prevMonth(): void {
@@ -76,16 +78,16 @@ export class MainView implements OnInit {
   reload(): void {
     this.api.getCategories().subscribe(cats => {
       this.categories = Array.isArray(cats) ? cats : [];
-      this.cdr.detectChanges(); //  WYMUSZENIE ODŚWIEŻENIA
+      this.cdr.detectChanges();
 
       this.api.getTransactions(this.month, this.year).subscribe(tr => {
         this.transactions = Array.isArray(tr) ? tr : [];
-        this.cdr.detectChanges(); //  WYMUSZENIE ODŚWIEŻENIA
+        this.cdr.detectChanges();
       });
 
       this.api.getLimits(this.month, this.year).subscribe(lm => {
         this.limits = Array.isArray(lm) ? lm : [];
-        this.cdr.detectChanges(); //  WYMUSZENIE ODŚWIEŻENIA
+        this.cdr.detectChanges();
       });
     });
   }
@@ -93,12 +95,14 @@ export class MainView implements OnInit {
   openAddCategory(): void {
     this.isCategoryModalOpen = true;
   }
+
   closeAddCategory(): void {
     if (!this.isSaving) {
       this.isCategoryModalOpen = false;
     }
   }
-  handleSaveCategory(data: any): void {
+
+  handleSaveCategory(data: newCategory): void {
     if (this.isSaving) return;
     this.isSaving = true;
 
@@ -130,7 +134,7 @@ export class MainView implements OnInit {
     }
   }
 
-  handleSaveTransaction(data: any): void {
+  handleSaveTransaction(data: newTransaction): void {
     if (this.isSaving) return; 
     this.isSaving = true;
 
