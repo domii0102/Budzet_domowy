@@ -1,10 +1,24 @@
 
-<div class="box" [style.--bg-color]="category()?.color">
-    <h3>{{transaction()?.name}}</h3>
-    <p>{{transaction()?.date}}</p>
-    <p>Kategoria: {{category()?.name}}</p>
-    <p><strong>Kwota: {{transaction()?.value}}</strong></p>
-    <p>{{transaction()?.description}}</p>
-    <button>Edytuj</button>
-    <button>Usuń</button>
-</div>
+
+<article
+          class="card"
+          [style.background]="category()?.color || '#4aa3ff'"
+        >
+          <div class="card-title">{{ transaction()?.name }}</div> 
+
+          <div class="muted">
+            Date: {{ transaction()?.date ? (transaction()?.date | date:'dd.MM.yyyy') : '-' }}
+          </div>
+
+          <div class="price">${{ transaction()?.value }}</div>
+
+          <div class="muted">
+            Category: {{ category()?.name || '-' }}
+          </div>
+
+          @if (transaction()?.description) {
+          <div class="muted">
+            Description: {{ transaction()?.description }}
+          </div>
+        }
+</article>

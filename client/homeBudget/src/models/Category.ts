@@ -7,14 +7,14 @@ export enum Color {
     Orange = "#feaa6f"
 }
 
-export class Category {
-    id: string;
+export interface Category {
+    _id: string;
     name: string;
     color: Color;
 
-    constructor(id: string, name: string, color: Color){
-        this.id = id;
-        this.name = name;
-        this.color = color;
-    }
+}
+
+export interface newCategory{
+    name: string;
+    color: Color;
 }

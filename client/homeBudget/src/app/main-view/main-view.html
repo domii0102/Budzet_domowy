@@ -1,30 +1,133 @@
-<h3>Miesiąc: {{month}}</h3>
-<h3>Rok: {{year}}</h3>
+<div class="page">
+  <h1 class="title">BudgetApp</h1>
 
-<div class="container">
+  <div class="monthbar">
+  <button class="nav-btn" type="button" (click)="prevMonth()">‹</button>
 
-    <h3>Transakcje:</h3>
-    <div class="box">
-        @for (t of transactions; track $index){
-        <app-transaction-view [transaction]=t [category]=getCategory(t.category_id)></app-transaction-view>
-        }
+  <select class="select month" [(ngModel)]="month" (change)="reload()">
+    @for (m of months; track $index) {
+      <option [ngValue]="$index">
+        {{ m }}
+    </option>
+    }
+  </select>
 
+  <select class="select year" [(ngModel)]="year" (change)="reload()">
+    @for (y of years; track $index) {
+      <option [ngValue]="y">
+        {{ y }}
+      </option>
+    }
+  </select>
+
+  <button class="nav-btn" type="button" (click)="nextMonth()">›</button>
 </div>
 
-<div class="column">
-    <h3>Kategorie</h3>
-    <div class="small-box">
-        @for (cat of categories; track $index){
-            <p >{{cat.name}}</p>
-        }
-    </div>
+
+  <div class="layout">
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Transactions</h2>
+        <button class="action" type="button" (click)="openAddTransaction()">
+          Add Transaction <span>+</span>
+        </button>
 
 
-    <h3>Limity</h3>
-    <div class="small-box">
-        @for (l of limits; track $index){
-            <p>{{getCategory(l.category_id).name}}: {{l.value}}</p>
+      </div>
+
+      <div class="cards">
+        @for (t of transactions; track $index) {
+          <app-transaction-view
+            [transaction]="t"
+            [category]="getCategory(t.category_id)"></app-transaction-view>
         }
-    </div>
+      </div>
+    </section>
+
+
+    <section class="panel">
+      <div class="panel-header">
+        @if (sideContent ==='limits') {
+        <h2>Budget limits</h2>
+        }
+        @else if (sideContent ==='categories') {
+          <h2>Categories</h2>
+        }
+        <button class="action" type="button" (click)="changeSideContent()"
+          [disabled]="limitsButtonIsDisabled">
+          Limits
+        </button>
+        <button class="action" type="button" (click)="changeSideContent()"
+          [disabled]="categoriesButtonIsDisabled">
+          Categories
+        </button>
+        @if (sideContent ==='limits') {
+        <button class="action" type="button" (click)="openAddLimit()">
+          Add Limit <span>+</span>
+        </button>
+      } 
+        @else if (sideContent ==='categories') {
+        <button class="action" type="button" (click)="openAddCategory()">
+          Add Category <span>+</span>
+        </button>
+      }
+      </div>
+
+      <div class="limits">
+        @if (sideContent ==='limits') {
+          @for (l of limits; track $index) {
+            <div class="limit">
+              <div class="limit-name">
+            {{ getCategory(l.category_id)?.name || '-' }}
+          </div>
+          <div class="limit-value">${{ l.value }}</div>
+          </div>
+          }
+          
+        
+      } 
+      @else if (sideContent ==='categories') {
+          @for (c of categories; track $index) {
+            <div class="category">
+              <div class="limit-name">
+            {{ c.name || '-' }}
+            </div>
+            <div class="color-square" [style.background]="c.color || '#4aa3ff'"></div>
+          </div>
+          }
+          
+      }
+      </div>
+    </section>
+  </div>
+
 </div>
+@if (isCategoryModalOpen) {
+  <div class="overlay-backdrop">
+  <app-add-category-view
+    (save)="handleSaveCategory($event)"
+    (close)="closeAddCategory()"
+  ></app-add-category-view>
 </div>
+}
+
+@if (isTransactionModalOpen){
+<div class="overlay-backdrop">
+  <app-add-transaction-view
+    [categories]="categories"
+    (save)="handleSaveTransaction($event)"
+    (close)="closeAddTransaction()"
+  ></app-add-transaction-view>
+</div>
+}
+
+@if (isLimitModalOpen){
+<div class="overlay-backdrop">
+  <app-add-limit-view
+    [categories]="categories"
+    (save)="handleSaveLimit($event)"
+    (close)="closeAddLimit()"
+  ></app-add-limit-view>
+</div>
+}
