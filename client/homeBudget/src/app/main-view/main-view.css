@@ -3,39 +3,6 @@ html, body {
   padding: 0;
 }
 
-.page { 
-  padding: 24px; 
-  font-family: Arial, sans-serif; 
-  width: 96vw; 
-  box-sizing: border-box; 
- }
-.title { margin: 0 0 14px; font-size: 22px; font-weight: 700; }
-
-.monthbar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border: 1px solid #eee;
-  border-radius: 14px;
-  width: fit-content;
-  margin-bottom: 18px;
-}
-
-.select {
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 6px 10px;
-  background: white;
-}
-
-.nav-btn {
-  border: 1px solid #ddd;
-  background: white;
-  border-radius: 10px;
-  padding: 6px 10px;
-  cursor: pointer;
-}
 
 .layout {
   display: grid;
@@ -104,38 +71,6 @@ html, body {
 
 .limits { display: grid; gap: 12px; }
 
-.limit {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 14px;
-  padding: 14px 12px;
-  border: 1px solid #f0f0f0;
-}
-.category {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 14px;
-  padding: 14px 12px;
-  border: 1px solid #f0f0f0;
-}
 
-.select.month { min-width: 140px; }
-.select.year  { min-width: 90px; }
-
-.limit-name { font-weight: 600; }
-.limit-value { color: #0a8f2c; font-weight: 800; }
-.monthbar { position: relative; z-index: 2; }
 .select { pointer-events: auto; z-index: 3; position: relative; }
-.nav-btn { pointer-events: auto; z-index: 3; position: relative; }
 
-.color-square {
-  width: 25px;
-  height: 25px;
-  border-radius: 8px; 
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-  position: relative;
-}

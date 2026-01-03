@@ -1,0 +1,8 @@
+@for (c of categories(); track $index) {
+<div class="category">
+    <div class="category-name">
+        {{ c.name || '-' }}
+    </div>
+    <div class="color-square" [style.background]="c.color || '#4aa3ff'"></div>
+</div>
+}

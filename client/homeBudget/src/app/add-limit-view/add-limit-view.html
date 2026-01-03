@@ -15,12 +15,20 @@
       }
     </select>
   </div>
+  @if (limitForm.get('category_id')?.touched &&
+      limitForm.get('category_id')?.invalid) {
+      <div class="error-message">{{getErrorMessage('category_id')}}</div>
+    }
 
 
     <div class="form-group">
       <label>Value:</label>
       <input type="number" formControlName="value" placeholder="0.00">
     </div>
+    @if (limitForm.get('value')?.touched &&
+      limitForm.get('value')?.invalid) {
+      <div class="error-message">{{getErrorMessage('value')}}</div>
+    }
 
     <div class="form-group">
       <label>Month:</label>
@@ -33,16 +41,20 @@
       }
     </select>
     </div>
+    @if (limitForm.get('month')?.touched &&
+      limitForm.get('month')?.invalid) {
+      <div class="error-message">{{getErrorMessage('month')}}</div>
+    }
 
     <div class="form-group">
       <label>Year:</label>
       <input type="number" formControlName="year" placeholder="2025" min="2000" max="2050">
     </div>
-
-    
-  @if (errorMessage!==null) {
-        <div class="error-message">{{errorMessage}}</div>
+    @if (limitForm.get('year')?.touched &&
+      limitForm.get('year')?.invalid) {
+      <div class="error-message">{{getErrorMessage('year')}}</div>
     }
+
 
     <div class="actions">
       <button class="btn-cancel" (click)="onCancel()">Anuluj</button>

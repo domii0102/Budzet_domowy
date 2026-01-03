@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { Component, OnInit, ChangeDetectorRef, inject, input } from '@angular/core';
+import { CommonModule} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { BudgetApiService } from '../services/budget-api.service';
@@ -7,31 +7,23 @@ import { TransactionView } from '../transaction-view/transaction-view';
 import { AddCategoryView } from '../add-category-view/add-category-view';
 import { AddTransactionView } from '../add-transaction-view/add-transaction-view';
 import { AddLimitView } from '../add-limit-view/add-limit-view';
+import {CategoriesView} from '../categories-view/categories-view';
+import { LimitsView } from '../limits-view/limits-view';
 import { Category, newCategory } from '../../models/Category';
 import { Transaction, newTransaction } from '../../models/Transaction';
 import { Limit, newLimit } from '../../models/Limit';
 
 @Component({
   selector: 'app-main-view',
-  imports: [CommonModule, TransactionView, FormsModule, AddCategoryView, AddTransactionView, AddLimitView],
+  imports: [CommonModule, TransactionView, FormsModule, AddCategoryView, AddTransactionView, AddLimitView, CategoriesView, LimitsView],
   templateUrl: './main-view.html',
   styleUrl: './main-view.css',
 })
 export class MainView implements OnInit {
 
-  month: number;
-  year: number;
-  today = new Date();
-  months: string[] = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
-
-  years: number[] = Array.from(
-    { length: 10 },
-    (_, i) => this.today.getFullYear() - 5 + i
-  );
-
+  month = input.required<number>();
+  year = input.required<number>();
+  
   categories: Category[] = [];
   transactions: Transaction[] = [];
   limits: Limit[] = [];
@@ -48,50 +40,31 @@ export class MainView implements OnInit {
   api: BudgetApiService = inject(BudgetApiService);
   cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-  constructor() {
-    this.month = this.today.getMonth();
-    this.year = this.today.getFullYear();
+  
+  ngOnInit(): void {
+    this.reload();
   }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.reload();
   }
 
   getCategory(id: string): Category | undefined {
     return this.categories.find((c: Category) => c._id === id);
   }
-
-  prevMonth(): void {
-    if (this.month > 0) {
-      this.month--;
-    } else {
-      this.month = 11;
-      this.year--;
-    }
-    this.reload();
-  }
-
-  nextMonth(): void {
-    if (this.month < 11) {
-      this.month++;
-    } else {
-      this.month = 0;
-      this.year++;
-    }
-    this.reload();
-  }
+  
 
   reload(): void {
     this.api.getCategories().subscribe(cats => {
       this.categories = Array.isArray(cats) ? cats : [];
       this.cdr.detectChanges();
 
-      this.api.getTransactions(this.month, this.year).subscribe(tr => {
+      this.api.getTransactions(this.month(), this.year()).subscribe(tr => {
         this.transactions = Array.isArray(tr) ? tr : [];
         this.cdr.detectChanges();
       });
 
-      this.api.getLimits(this.month, this.year).subscribe(lm => {
+      this.api.getLimits(this.month(), this.year()).subscribe(lm => {
         this.limits = Array.isArray(lm) ? lm : [];
         this.cdr.detectChanges();
       });

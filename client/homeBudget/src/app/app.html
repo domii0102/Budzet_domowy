@@ -1,9 +1,32 @@
 
-<header class="header">
-</header>
+<div class="page">
+  <h1 class="title">BudgetApp</h1>
+
+  <div class="monthbar">
+  <button class="nav-btn" type="button" (click)="prevMonth()">‹</button>
+
+
+  <select class="select month" [(ngModel)]="month">
+    @for (m of months; track $index) {
+      <option [ngValue]="$index">
+        {{ m }}
+    </option>
+    }
+  </select>
+
+  <select class="select year" [(ngModel)]="year">
+    @for (y of years; track $index) {
+      <option [ngValue]="y">
+        {{ y }}
+      </option>
+    }
+  </select>
+
+  <button class="nav-btn" type="button" (click)="nextMonth()">›</button>
+</div>
 
 
 <main class="content">
-  <app-main-view></app-main-view>
+  <app-main-view [month]="month" [year]="year"></app-main-view>
 </main>
 

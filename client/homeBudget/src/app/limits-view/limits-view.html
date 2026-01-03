@@ -1,0 +1,8 @@
+@for (l of limits(); track $index) {
+<div class="limit">
+    <div class="limit-name">
+        {{ getCategory(l.category_id)?.name || '-' }}
+    </div>
+    <div class="limit-value">${{ l.value }}</div>
+</div>
+}

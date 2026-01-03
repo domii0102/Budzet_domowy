@@ -1,0 +1,11 @@
+.limit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 14px;
+  padding: 14px 12px;
+  border: 1px solid #f0f0f0;
+}
+
+.limit-name { font-weight: 600; }
+.limit-value { color: #0a8f2c; font-weight: 800; }

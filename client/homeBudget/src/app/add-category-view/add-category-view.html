@@ -1,43 +1,48 @@
 <div class="modal-backdrop" (click)="onCancel()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <h2>Add Category</h2>
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Add Category</h2>
 
-    <form [formGroup]="categoryForm">
-    <div class="form-group">
-        <label>Name</label>
-        <input type="text" formControlName="name" placeholder="e.g. Groceries" class="input-field" (keydown.enter)="onSubmit()" required/>
-    </div>
+        <form [formGroup]="categoryForm">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" formControlName="name"
+                    placeholder="e.g. Groceries" class="input-field"
+                    (keydown.enter)="onSubmit()" required />
+            </div>
+            @if (categoryForm.get('name')?.touched &&
+            categoryForm.get('name')?.invalid) {
+            <div class="error-message">This field is required</div>
+            }
 
-    <div class="form-group">
-        <label>Color</label>
-        <div class="colors-row">
-        
-        @for (c of allowedColors; track $index) {
-            <div 
-            class="color-square"
-            [style.background-color]="c"
-            [class.selected]="categoryForm.get('color')?.value === c"
-            (click)="selectColor(c)"
-            >
-            @if (categoryForm.get('color')?.value === c) {
-                <span class="check-icon">✓</span>
-        }
+            <div class="form-group">
+                <label>Color</label>
+                <div class="colors-row">
 
-        </div>
-    }
-        </div>
-    </div>
-    @if (errorMessage!==null) {
-        <div class="error-message">{{errorMessage}}</div>
-    }
-    <div>
+                    @for (c of allowedColors; track $index) {
+                    <div
+                        class="color-square"
+                        [style.background-color]="c"
+                        [class.selected]="categoryForm.get('color')?.value === c"
+                        (click)="selectColor(c)">
+                        @if (categoryForm.get('color')?.value === c) {
+                        <span class="check-icon">✓</span>
+                        }
 
-    </div>
+                    </div>
+                    }
+                </div>
+            </div>
+            @if (categoryForm.get('color')?.touched &&
+            categoryForm.get('color')?.invalid) {
+            <div class="error-message">This field is required</div>
+            }
 
-    <div class="actions">
-        <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
-        <button type="button" class="btn-save" (click)="onSubmit()">Save</button>
+            <div class="actions">
+                <button type="button" class="btn-cancel"
+                    (click)="onCancel()">Cancel</button>
+                <button type="button" class="btn-save"
+                    (click)="onSubmit()">Save</button>
+            </div>
+        </form>
     </div>
-    </form>
-    </div>
-    </div>
+</div>

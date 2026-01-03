@@ -35,7 +35,9 @@ export class AddCategoryView {
 
   onSubmit() {
     if (this.categoryForm.invalid) {
-      this.errorMessage = 'Please fill in all fields.';
+      for (const controlName in this.categoryForm.controls) {
+        this.categoryForm.get(controlName)?.markAsTouched();
+      }
       return;
     }
     this.save.emit(this.categoryForm.value);
