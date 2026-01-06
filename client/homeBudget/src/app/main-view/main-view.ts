@@ -9,13 +9,14 @@ import { AddTransactionView } from '../add-transaction-view/add-transaction-view
 import { AddLimitView } from '../add-limit-view/add-limit-view';
 import {CategoriesView} from '../categories-view/categories-view';
 import { LimitsView } from '../limits-view/limits-view';
+import { DeleteConfirmation } from '../delete-confirmation/delete-confirmation';
 import { Category, newCategory } from '../../models/Category';
 import { Transaction, newTransaction } from '../../models/Transaction';
 import { Limit, newLimit } from '../../models/Limit';
 
 @Component({
   selector: 'app-main-view',
-  imports: [CommonModule, TransactionView, FormsModule, AddCategoryView, AddTransactionView, AddLimitView, CategoriesView, LimitsView],
+  imports: [CommonModule, TransactionView, FormsModule, AddCategoryView, AddTransactionView, AddLimitView, CategoriesView, LimitsView, DeleteConfirmation],
   templateUrl: './main-view.html',
   styleUrl: './main-view.css',
 })
@@ -32,6 +33,14 @@ export class MainView implements OnInit {
   isCategoryModalOpen: boolean = false;
   isLimitModalOpen: boolean = false;
   isSaving: boolean = false;
+  isDeleteConfirmationOpen: boolean = false;
+  isDeleting: boolean = false;
+  editedTransaction: Transaction | null = null;
+  editedCategory: Category | null = null;
+  editedLimit: Limit | null = null;
+  deletedTransaction: Transaction | null = null;
+  deletedLimit: Limit | null = null;
+  deletedCategory: Category | null = null;
 
   sideContent: string = 'limits';
   limitsButtonIsDisabled: boolean = true;
@@ -71,8 +80,13 @@ export class MainView implements OnInit {
     });
   }
 
-  openAddCategory(): void {
+
+  openAddCategory(categoryId?: string): void {
     this.isCategoryModalOpen = true;
+    if (categoryId) {
+      this.editedCategory = this.categories.find(c => c._id === categoryId) || null;
+      console.log('Editing category with ID:', this.editedCategory?._id);
+    }
   }
 
   closeAddCategory(): void {
@@ -100,17 +114,26 @@ export class MainView implements OnInit {
     });
   }
 
-  openAddTransaction(): void {
+  handleUpdateCategory(data: Category): void {}
+
+  openAddTransaction(transactionId?: string): void {
     if (this.categories.length === 0) {
         alert('No categories available. Please add a category first.');
         return;
     }
     this.isTransactionModalOpen = true;
+    if (transactionId) {
+      this.editedTransaction = this.transactions.find(t => t._id === transactionId) || null;
+      console.log('Editing transaction with ID:', this.editedTransaction?._id);
+    }
   }
+
   closeAddTransaction(): void {
     if (!this.isSaving) {
       this.isTransactionModalOpen = false;
     }
+    this.editedTransaction = null;
+    console.log('Closed transaction modal. this.editedTransactionId is now:', this.editedTransaction);
   }
 
   handleSaveTransaction(data: newTransaction): void {
@@ -135,13 +158,20 @@ export class MainView implements OnInit {
     });
   }
 
-  openAddLimit(): void {
+  handleUpdateTransaction(data: Transaction): void {}
+
+  openAddLimit(limitId?: string): void {
     if (this.categories.length === 0) {
         alert('No categories available. Please add a category first.');
         return;
     }
     this.isLimitModalOpen = true;
+    if (limitId) {
+      this.editedLimit = this.limits.find(l => l._id === limitId) || null;
+      console.log('Editing limit with ID:', this.editedLimit?._id);
+    }
   }
+
   closeAddLimit(): void {
     if (!this.isSaving) {
       this.isLimitModalOpen = false;
@@ -170,6 +200,7 @@ export class MainView implements OnInit {
     });
   }
   
+  handleUpdateLimit(data: Limit): void {}
 
   changeSideContent(): void {
     if (this.sideContent === 'limits') {
@@ -180,6 +211,33 @@ export class MainView implements OnInit {
       this.sideContent = 'limits';
       this.limitsButtonIsDisabled = true;
       this.categoriesButtonIsDisabled = false;
+    }
+  }
+
+  openDeleteTransaction(transactionId: string): void {
+    this.deletedTransaction = this.transactions.find(t => t._id === transactionId) || null;
+    this.isDeleteConfirmationOpen = true;
+  }
+
+  openDeleteLimit(limitId: string): void {
+    this.deletedLimit = this.limits.find(l => l._id === limitId) || null;
+    this.isDeleteConfirmationOpen = true;
+  }
+
+  openDeleteCategory(categoryId: string): void {
+    this.deletedCategory = this.categories.find(c => c._id === categoryId) || null;
+    this.isDeleteConfirmationOpen = true;
+  }
+
+  handleDeleteTransaction(transactionId: string): void {}
+
+  handleDeleteLimit(limitId: string): void {}
+
+  handleDeleteCategory(categoryId: string): void {}
+
+  closeDeleteConfirmation(): void {
+    if (!this.isDeleting) {
+      this.isDeleteConfirmationOpen = false;
     }
   }
 }

@@ -4,5 +4,17 @@
         {{ getCategory(l.category_id)?.name || '-' }}
     </div>
     <div class="limit-value">${{ l.value }}</div>
+
+    <div class="action-wrapper">
+    <button class="main-btn" (click)="changeOptionsVisibility()">...</button>
+
+    @if (options === 1){
+      <div class="submenu">
+      <button (click)="onUpdate(l._id)">Edytuj</button>
+      <button (click)="onDelete(l._id)">Usuń</button>
+    </div>
+    }
+    </div>
+
 </div>
 }

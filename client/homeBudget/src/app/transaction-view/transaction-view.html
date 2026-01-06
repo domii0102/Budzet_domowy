@@ -1,24 +1,36 @@
 
+  <article
+  class="card"
+  [style.background]="category()?.color || '#4aa3ff'">
 
-<article
-          class="card"
-          [style.background]="category()?.color || '#4aa3ff'"
-        >
-          <div class="card-title">{{ transaction()?.name }}</div> 
+  <div class="action-wrapper">
+    <button class="main-btn" (click)="changeOptionsVisibility()">...</button>
 
-          <div class="muted">
-            Date: {{ transaction()?.date ? (transaction()?.date | date:'dd.MM.yyyy') : '-' }}
-          </div>
+    @if (options === 1){
+      <div class="submenu">
+      <button (click)="onUpdate()">Edytuj</button>
+      <button (click)="onDelete()">Usuń</button>
+    </div>
+    }
+    </div>
+    
 
-          <div class="price">${{ transaction()?.value }}</div>
+  <div class="card-title">{{ transaction().name }}</div>
 
-          <div class="muted">
-            Category: {{ category()?.name || '-' }}
-          </div>
+  <div class="muted">
+    Date: {{ transaction().date ? (transaction().date | date:'dd.MM.yyyy') :
+    '-' }}
+  </div>
 
-          @if (transaction()?.description) {
-          <div class="muted">
-            Description: {{ transaction()?.description }}
-          </div>
-        }
+  <div class="price">${{ transaction().value }}</div>
+
+  <div class="muted">
+    Category: {{ category()?.name || '-' }}
+  </div>
+
+  @if (transaction().description) {
+  <div class="muted">
+    Description: {{ transaction().description }}
+  </div>
+  }
 </article>

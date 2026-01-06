@@ -4,5 +4,17 @@
         {{ c.name || '-' }}
     </div>
     <div class="color-square" [style.background]="c.color || '#4aa3ff'"></div>
+
+    <div class="action-wrapper">
+    <button class="main-btn" (click)="changeOptionsVisibility()">...</button>
+
+    @if (options === 1){
+      <div class="submenu">
+      <button (click)="onUpdate(c._id)">Edytuj</button>
+      <button (click)="onDelete(c._id)">Usuń</button>
+    </div>
+    }
+    </div>
+
 </div>
 }

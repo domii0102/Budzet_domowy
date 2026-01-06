@@ -1,6 +1,12 @@
 <div class="modal-backdrop" (click)="onCancel()">
   <div class="modal-content" (click)="$event.stopPropagation()">
+    @if (transaction()) {
+      <h2>Edit Transaction</h2>
+    }
+    @else {
     <h2>Add Transaction</h2>
+    
+    }
 
     <form [formGroup]="transactionForm">
       <div class="form-group">
@@ -54,8 +60,8 @@
       </div>
 
       <div class="actions">
-        <button class="btn-cancel" (click)="onCancel()">Anuluj</button>
-        <button class="btn-save" (click)="onSubmit()">Dodaj</button>
+        <button class="btn-cancel" (click)="onCancel()">Cancel</button>
+        <button class="btn-save" (click)="onSubmit()">Save</button>
       </div>
     </form>
 

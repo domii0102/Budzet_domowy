@@ -15,7 +15,9 @@
       @for (t of transactions; track $index) {
       <app-transaction-view
         [transaction]="t"
-        [category]="getCategory(t.category_id)"></app-transaction-view>
+        [category]="getCategory(t.category_id)"
+        (update)="openAddTransaction($event)"
+        (delete)="openDeleteTransaction($event)"></app-transaction-view>
       }
     </div>
   </section>
@@ -50,10 +52,15 @@
 
     <div class="limits">
       @if (sideContent ==='limits') {
-      <app-limits-view [limits]="limits" [categories]="categories"></app-limits-view>
+      <app-limits-view [limits]="limits"
+        [categories]="categories"
+        (update)="openAddLimit($event)"
+        (delete)="openDeleteLimit($event)"></app-limits-view>
       }
       @else if (sideContent ==='categories') {
-      <app-categories-view [categories]="categories"></app-categories-view>
+      <app-categories-view [categories]="categories"
+        (update)="openAddCategory($event)"
+        (delete)="openDeleteCategory($event)"></app-categories-view>
       }
     </div>
   </section>
@@ -62,7 +69,9 @@
 @if (isCategoryModalOpen) {
 <div class="overlay-backdrop">
   <app-add-category-view
+    [category]="editedCategory"
     (save)="handleSaveCategory($event)"
+    (update)="handleUpdateCategory($event)"
     (close)="closeAddCategory()"></app-add-category-view>
 </div>
 }
@@ -71,7 +80,9 @@
 <div class="overlay-backdrop">
   <app-add-transaction-view
     [categories]="categories"
+    [transaction]="editedTransaction"
     (save)="handleSaveTransaction($event)"
+    (update)="handleUpdateCategory($event)"
     (close)="closeAddTransaction()"></app-add-transaction-view>
 </div>
 }
@@ -80,7 +91,23 @@
 <div class="overlay-backdrop">
   <app-add-limit-view
     [categories]="categories"
+    [limit]="editedLimit"
     (save)="handleSaveLimit($event)"
+    (update)="handleUpdateLimit($event)"
     (close)="closeAddLimit()"></app-add-limit-view>
+</div>
+}
+
+@if (isDeleteConfirmationOpen){
+<div class="overlay-backdrop">
+  <app-delete-confirmation
+    [categories]="categories"
+    [transaction]="deletedTransaction"
+    [category]="deletedCategory"
+    [limit]="deletedLimit"
+    (deleteTransaction)="handleDeleteTransaction($event)"
+    (deleteCategory)="handleDeleteCategory($event)"
+    (deleteLimit)="handleDeleteLimit($event)"
+    (close)="closeDeleteConfirmation()"></app-delete-confirmation>
 </div>
 }

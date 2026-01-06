@@ -1,6 +1,12 @@
 <div class="modal-backdrop" (click)="onCancel()">
   <div class="modal-content" (click)="$event.stopPropagation()">
-    <h2>Add Limit</h2>
+    @if (limit()) {
+    <h2>Edit Limit</h2>
+    }
+    @else {
+      <h2>Add Limit</h2>
+    }
+    
 
   <form [formGroup]="limitForm">
 
@@ -57,8 +63,8 @@
 
 
     <div class="actions">
-      <button class="btn-cancel" (click)="onCancel()">Anuluj</button>
-      <button class="btn-save" (click)="onSubmit()">Dodaj</button>
+      <button class="btn-cancel" (click)="onCancel()">Cancel</button>
+      <button class="btn-save" (click)="onSubmit()">Save</button>
     </div>
   </form>
 

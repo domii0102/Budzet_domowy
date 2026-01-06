@@ -3,6 +3,7 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { Category } from '../../models/Category';
 import { futureDateValidator } from '../date-validator';
+import { Transaction } from '../../models/Transaction';
 
 
 @Component({
@@ -14,16 +15,25 @@ import { futureDateValidator } from '../date-validator';
 })
 export class AddTransactionView {
   categories = input.required<Category[]>();
+  transaction = input<Transaction | null>();
   save = output<any>();
+  update = output<any>();
   close = output<void>();
+  transactionForm: FormGroup = new FormGroup({});
 
-  transactionForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    value: new FormControl('', [Validators.required, Validators.min(0.01)]),
-    date: new FormControl(new Date().toISOString().slice(0, 10), [Validators.required, futureDateValidator()]),
-    category_id: new FormControl('', Validators.required),
-    description: new FormControl(''),
+
+  ngOnInit() {
+  const date = this.transaction() ? new Date(this.transaction()!.date) : new Date();
+
+  this.transactionForm = new FormGroup({
+    _id: new FormControl(this.transaction() ? this.transaction()?._id : ''),
+    name: new FormControl(this.transaction() ? this.transaction()?.name : '', Validators.required),
+    value: new FormControl(this.transaction() ? this.transaction()?.value.toString() : '', [Validators.required, Validators.min(0.01)]),
+    date: new FormControl(this.transaction() ? date.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10), [Validators.required, futureDateValidator()]),
+    category_id: new FormControl(this.transaction() ? this.transaction()?.category_id : '', Validators.required),
+    description: new FormControl(this.transaction() ? this.transaction()?.description : ''),
   });
+}
 
   errorMessages = {
     required: 'This field is required.',
@@ -57,9 +67,15 @@ export class AddTransactionView {
       }
       return;
     }
+    if (this.transaction()) {
+      this.update.emit(this.transactionForm.value);
+      return;
+    }
     this.save.emit(this.transactionForm.value);
   }
   onCancel() {
     this.close.emit();
   }
+
+
 }
