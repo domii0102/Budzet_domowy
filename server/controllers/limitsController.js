@@ -123,6 +123,63 @@ export async function addLimit(req, res) {
      return res.status(201).json({ success: true, data: createdLimit })
 };
 
-export function editLimit(req, res) { };
+export async function editLimit(req, res) { 
 
-export function deleteLimit(req, res) { };
+    const result = limitSchema.safeParse(req.body);
+
+    if (!result.success) {
+        return res.status(400).json({ success: false, error: z.flattenError(result.error) });
+    }
+
+    const { value, category_id, month, year } = result.data;
+    const id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, error: "Invalid limit id" });
+    };
+
+    if (!mongoose.Types.ObjectId.isValid(category_id)) {
+        return res.status(400).json({ success: false, error: "Invalid category_id" });
+    }
+
+    let category;
+
+    try {
+        category = await Category.findById(category_id);
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ success: false, error: "A database error has occurred" });
+    }
+
+    if (!category) {
+        return res.status(404).json({ success: false, error: `Category with _id: ${category_id} not found` });
+    }
+
+    try {
+        await Limit.findByIdAndUpdate(id, { value: value, category_id: category_id, month: month, year: year });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ success: false, error: "A database error has occurred" });
+    }
+    return res.json({ success: true, data: { value: value, category_id: category_id, month: month, year: year } });
+};
+
+export async function deleteLimit(req, res) { 
+    const id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, error: "Invalid limit id" });
+    };
+
+    try {
+        await Limit.findByIdAndDelete(id);
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ success: false, error: "A database error has occurred" });
+    };
+    return res.json({ success: true, data: {} });
+
+};

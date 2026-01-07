@@ -7,7 +7,7 @@ router.get("/:id", getLimit);
 // z parametrów req.params wyciągnąć month i year
 router.get("/", getMonthlyLimits);
 router.post("/", addLimit);
-router.put("/", editLimit);
-router.delete("/", deleteLimit);
+router.put("/:id", editLimit);
+router.delete("/:id", deleteLimit);
 
 export default router;

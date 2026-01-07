@@ -7,7 +7,7 @@ router.get("/:id", getTransaction);
 // z parametrów req.params wyciągnąć month i year
 router.get("/", getMonthlyTransactions);
 router.post("/", addTransaction);
-router.put("/", editTransaction);
-router.delete("/", deleteTransaction);
+router.put("/:id", editTransaction);
+router.delete("/:id", deleteTransaction);
 
 export default router;

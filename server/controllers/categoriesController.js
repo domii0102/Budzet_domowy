@@ -73,6 +73,49 @@ export async function addCategory(req, res) {
     
  };
 
-export function editCategory(req, res) { };
+export async function editCategory(req, res) { 
+    const result = categorySchema.safeParse(req.body);
 
-export function deleteCategory(req, res) { };
+    if (!result.success) {
+        return res.status(400).json({ success: false, error: z.flattenError(result.error) });
+    }
+
+    const {name, color} = result.data;
+    const id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, error: "Invalid category id" });
+    };
+
+    try {
+        await Category.findByIdAndUpdate(id, {name: name, color: color});
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({ success: false, error: "A database error has occurred"});
+    }
+
+    return res.json({success: true, data: {name: name, color: color}});
+};
+
+
+
+export async function deleteCategory(req, res) { 
+
+    const id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, error: "Invalid category id" });
+    };
+
+    try {
+        await Category.findByIdAndDelete(id);
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({ success: false, error: "A database error has occurred"});
+    };
+
+    return res.json({success: true, data: {}});
+
+};

@@ -122,6 +122,63 @@ export async function addTransaction(req, res) {
 
 };
 
-export function editTransaction(req, res) { };
+export async function editTransaction(req, res) {
 
-export function deleteTransaction(req, res) { };
+    const result = transactionSchema.safeParse(req.body);
+    const id = req.params.id;
+
+    if (!result.success) {
+        return res.status(400).json({ success: false, error: z.flattenError(result.error) });
+    };
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, error: "Invalid transaction id" });
+    };
+
+    const { name, value, date, category_id, description } = result.data;
+
+    if (!mongoose.Types.ObjectId.isValid(category_id)) {
+        return res.status(400).json({ success: false, error: "Invalid category_id" });
+    };
+
+    let category;
+
+    try {
+        category = await Category.findById(category_id);
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ success: false, error: "A database error has occurred" });
+    };
+
+    if (!category) {
+        return res.status(404).json({ success: false, error: `Category with _id: ${category_id} not found` });
+    };
+
+    try {
+        await Transaction.findByIdAndUpdate(id, { name: name, value: value, date: date, category_id: category_id, description: description });
+    }
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ success: false, error: "A database error has occurred" });
+    };
+    return res.json({ success: true, data: { name: name, value: value, date: date, category_id: category_id, description: description } });
+ };
+
+export async function deleteTransaction(req, res) { 
+    const id = req.params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ success: false, error: "Invalid transaction id" });
+    };
+
+    try {
+        await Transaction.findByIdAndDelete(id);
+    } 
+    catch (err) {
+        console.log(err);
+        return res.status(500).json({ success: false, error: "A database error has occurred" });
+    };
+
+    return res.json({ success: true, data: {} });
+};
