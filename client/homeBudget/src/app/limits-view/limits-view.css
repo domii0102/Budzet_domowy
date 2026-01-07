@@ -1,6 +1,8 @@
 .limit {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 50px 40px; 
+  align-items: center;
+  gap: 60px;
   align-items: center;
   border-radius: 14px;
   padding: 14px 12px;
@@ -8,14 +10,38 @@
 }
 
 .limit-name { font-weight: 600; }
-.limit-value { color: #0a8f2c; font-weight: 800; }
-
-
+.limit-value { 
+    color: #0a8f2c; 
+    font-weight: 800; 
+    white-space: nowrap; 
+}
+.limit.limit-exceeded .limit-value {
+    color: #d32f2f; 
+}
+.limit.limit-exceeded {
+    border-color: #ffcdd2;
+    background-color: #fff8f8;
+}
+.warning-text {
+    font-size: 0.75rem;
+    color: #d32f2f;
+    font-weight: normal;
+    margin-top: 2px;
+}
 .action-wrapper {
   position: relative;
   display: inline-block;
 }
-
+.main-btn {
+  font-weight: bold;
+  background-color: transparent;
+  color: black;
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
 
 .submenu {
   position: absolute;

@@ -1,19 +1,26 @@
 @for (l of limits(); track $index) {
-<div class="limit">
+<div class="limit" [class.limit-exceeded]="(l.spent || 0) > l.value">
+    
     <div class="limit-name">
         {{ getCategory(l.category_id)?.name || '-' }}
+        @if ((l.spent || 0) > l.value) {
+            <div class="warning-text">Limit exceeded!</div>
+        }
     </div>
-    <div class="limit-value">${{ l.value }}</div>
+
+    <div class="limit-value">
+        {{ l.spent || 0 }}$ / {{ l.value }}$
+    </div>
 
     <div class="action-wrapper">
-    <button class="main-btn" (click)="changeOptionsVisibility()">...</button>
+        <button class="main-btn" (click)="changeOptionsVisibility()">...</button>
 
-    @if (options === 1){
-      <div class="submenu">
-      <button (click)="onUpdate(l._id)">Edytuj</button>
-      <button (click)="onDelete(l._id)">Usuń</button>
-    </div>
-    }
+        @if (options === 1){
+        <div class="submenu">
+            <button (click)="onUpdate(l._id)">Edytuj</button>
+            <button (click)="onDelete(l._id)">Usuń</button>
+        </div>
+        }
     </div>
 
 </div>

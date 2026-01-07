@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import * as z from 'zod';
 import { Limit } from '../models/Limit.js';
 import { Category } from '../models/Category.js'
+import { Transaction } from '../models/Transaction.js';
 import { limitSchema} from '../schemas/limitSchema.js';
 import { monthAndYearSchema } from '../schemas/monthAndYearSchema.js';
 
@@ -33,34 +34,45 @@ export async function getLimit(req, res) {
 
 export async function getMonthlyLimits(req, res) {
     const result = monthAndYearSchema.safeParse(req.query);
-
     if (!result.success) {
         return res.status(400).json({ success: false, error: z.flattenError(result.error) });
     }
-
     let { month, year } = result.data;
-
     const today = new Date();
-
-    if (!month) {
-        month = today.getMonth();
-    }
-
-    if (!year) {
-        year = today.getFullYear();
-    }
-
-    let limits;
-
+    if (month === undefined || month === null) month = today.getMonth(); 
+    if (!year) year = today.getFullYear();
     try {
-        limits = await Limit.find({ month: month, year: year });
-    }
-    catch (err) {
+        const limits = await Limit.find({ month: month, year: year }).lean();
+        const startDate = new Date(year, month, 1);
+        const endDate = new Date(year, Number(month) + 1, 0, 23, 59, 59);
+        const spending = await Transaction.aggregate([
+            {
+                $match: {
+                    date: { $gte: startDate, $lte: endDate },
+                }
+            },
+            {
+                $group: {
+                    _id: "$category_id", 
+                    totalSpent: { $sum: "$value" } 
+                }
+            }
+        ]);
+        const limitsWithSpending = limits.map(limit => {
+            const categorySpending = spending.find(s => s._id.toString() === limit.category_id.toString());
+            
+            return {
+                ...limit,
+                spent: categorySpending ? categorySpending.totalSpent : 0
+            };
+        });
+
+        return res.json({ success: true, data: limitsWithSpending });
+
+    } catch (err) {
         console.log(err);
         return res.status(500).json({ success: false, error: "A database error has occurred" });
     }
-
-    return res.json({ success: true, data: limits });
 };
 
 export async function addLimit(req, res) {

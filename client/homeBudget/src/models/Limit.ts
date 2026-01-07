@@ -5,6 +5,7 @@ export interface Limit {
     category_id: string;
     month: number;
     year: number;
+    spent?: number;
 }
 
 export interface newLimit {
