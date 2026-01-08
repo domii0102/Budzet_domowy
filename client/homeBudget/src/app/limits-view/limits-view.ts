@@ -29,10 +29,8 @@ export class LimitsView {
 
    changeOptionsVisibility() {
     if (this.options === 0) {
-      console.log('changing category options visibility to 1');
       this.options = 1;
     } else {
-      console.log('changing category options visibility to 0');
       this.options = 0;
     }
   }

@@ -46,4 +46,29 @@ export class BudgetApiService {
   addCategory(body: newCategory): Observable<any> {
     return this.http.post(`${this.base}/categories`, body);
   }
+
+  updateTransaction(body: Transaction): Observable<any> {
+    return this.http.put(`${this.base}/transactions/${body._id}`, body);
+  }
+
+  updateLimit(body: Limit): Observable<any> {
+    return this.http.put(`${this.base}/limits/${body._id}`, body);
+  }
+
+  updateCategory(body: Category): Observable<any> {
+    return this.http.put(`${this.base}/categories/${body._id}`, body);
+  }
+
+  deleteTransaction(id: string): Observable<any> {
+    return this.http.delete(`${this.base}/transactions/${id}`);
+  }
+
+  deleteLimit(id: string): Observable<any> {
+    return this.http.delete(`${this.base}/limits/${id}`);
+  }
+
+  deleteCategory(id: string): Observable<any> {
+    return this.http.delete(`${this.base}/categories/${id}`);
+  }
 }
+

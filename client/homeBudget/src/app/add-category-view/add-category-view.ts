@@ -19,22 +19,23 @@ export class AddCategoryView {
   errorMessage: string | null = null;
 
   allowedColors = [
-  '#fe6f6f', 
-  '#6fd0fe', 
-  '#736ffe', 
-  '#fe6fc2', 
-  '#4adb42', 
-  '#feaa6f'
+    '#fe6f6f',
+    '#6fd0fe',
+    '#736ffe',
+    '#fe6fc2',
+    '#4adb42',
+    '#feaa6f'
   ]
 
   ngOnInit() {
     this.categoryForm = new FormGroup({
-    name: new FormControl(this.category() ? this.category()!.name : '', Validators.required),
-    color: new FormControl(this.allowedColors[0]),
-  });
+      _id: new FormControl(this.category() ? this.category()!._id : null),
+      name: new FormControl(this.category() ? this.category()!.name : '', Validators.required),
+      color: new FormControl(this.allowedColors[0]),
+    });
   }
 
-  
+
 
   selectColor(color: string) {
     this.categoryForm.get('color')?.setValue(color);

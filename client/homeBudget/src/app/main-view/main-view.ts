@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, inject, input } from '@angular/core';
-import { CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { BudgetApiService } from '../services/budget-api.service';
@@ -7,7 +7,7 @@ import { TransactionView } from '../transaction-view/transaction-view';
 import { AddCategoryView } from '../add-category-view/add-category-view';
 import { AddTransactionView } from '../add-transaction-view/add-transaction-view';
 import { AddLimitView } from '../add-limit-view/add-limit-view';
-import {CategoriesView} from '../categories-view/categories-view';
+import { CategoriesView } from '../categories-view/categories-view';
 import { LimitsView } from '../limits-view/limits-view';
 import { DeleteConfirmation } from '../delete-confirmation/delete-confirmation';
 import { Category, newCategory } from '../../models/Category';
@@ -24,7 +24,7 @@ export class MainView implements OnInit {
 
   month = input.required<number>();
   year = input.required<number>();
-  
+
   categories: Category[] = [];
   transactions: Transaction[] = [];
   limits: Limit[] = [];
@@ -49,7 +49,7 @@ export class MainView implements OnInit {
   api: BudgetApiService = inject(BudgetApiService);
   cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-  
+
   ngOnInit(): void {
     this.reload();
   }
@@ -61,7 +61,7 @@ export class MainView implements OnInit {
   getCategory(id: string): Category | undefined {
     return this.categories.find((c: Category) => c._id === id);
   }
-  
+
 
   reload(): void {
     this.api.getCategories().subscribe(cats => {
@@ -104,22 +104,42 @@ export class MainView implements OnInit {
         this.reload();
         this.isCategoryModalOpen = false;
         this.isSaving = false;
-        this.cdr.detectChanges(); 
-  },
-      error: (e) =>{ console.error('ADD CATEGORY ERROR:', e);
-      alert('An error occurred while adding the category.');
-      this.isSaving = false;
-      this.cdr.detectChanges();
+        this.cdr.detectChanges();
+      },
+      error: (e) => {
+        console.error('ADD CATEGORY ERROR:', e);
+        alert('An error occurred while adding the category.');
+        this.isSaving = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
-  handleUpdateCategory(data: Category): void {}
+  handleUpdateCategory(data: Category): void {
+    if (this.isSaving) return;
+    this.isSaving = true;
+
+    this.api.updateCategory(data).subscribe({
+      next: () => {
+        this.reload();
+        this.isCategoryModalOpen = false;
+        this.isSaving = false;
+        this.editedCategory = null;
+        this.cdr.detectChanges();
+      },
+      error: (e) => {
+        console.error('UPDATE CATEGORY ERROR:', e);
+        alert('An error occurred while updating the category.');
+        this.isSaving = false;
+        this.cdr.detectChanges();
+      }
+    })
+  }
 
   openAddTransaction(transactionId?: string): void {
     if (this.categories.length === 0) {
-        alert('No categories available. Please add a category first.');
-        return;
+      alert('No categories available. Please add a category first.');
+      return;
     }
     this.isTransactionModalOpen = true;
     if (transactionId) {
@@ -137,7 +157,7 @@ export class MainView implements OnInit {
   }
 
   handleSaveTransaction(data: newTransaction): void {
-    if (this.isSaving) return; 
+    if (this.isSaving) return;
     this.isSaving = true;
 
     console.log('New transaction data:', data);
@@ -148,7 +168,7 @@ export class MainView implements OnInit {
         this.reload();
         this.isTransactionModalOpen = false;
         this.isSaving = false;
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       },
       error: (e) => {
         console.log('ADD TRANSACTION ERROR:', e?.error);
@@ -158,12 +178,31 @@ export class MainView implements OnInit {
     });
   }
 
-  handleUpdateTransaction(data: Transaction): void {}
+  handleUpdateTransaction(data: Transaction): void { 
+    if (this.isSaving) return;
+    this.isSaving = true;
+
+    this.api.updateTransaction(data).subscribe({
+      next: () => {
+        this.reload();
+        this.isTransactionModalOpen = false;
+        this.isSaving = false;
+        this.editedTransaction = null;
+        this.cdr.detectChanges();
+      },
+      error: (e) => {
+        console.error('UPDATE TRANSACTION ERROR:', e);
+        alert('An error occurred while updating the transaction.');
+        this.isSaving = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   openAddLimit(limitId?: string): void {
     if (this.categories.length === 0) {
-        alert('No categories available. Please add a category first.');
-        return;
+      alert('No categories available. Please add a category first.');
+      return;
     }
     this.isLimitModalOpen = true;
     if (limitId) {
@@ -179,18 +218,18 @@ export class MainView implements OnInit {
   }
 
   handleSaveLimit(data: newLimit): void {
-    if (this.isSaving) return; 
+    if (this.isSaving) return;
     this.isSaving = true;
 
     console.log('New limit data:', data);
-    const payload = { ...data};
+    const payload = { ...data };
 
     this.api.addLimit(payload).subscribe({
       next: () => {
         this.reload();
         this.isLimitModalOpen = false;
         this.isSaving = false;
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       },
       error: (e) => {
         console.log('ADD LIMIT ERROR:', e?.error);
@@ -199,8 +238,27 @@ export class MainView implements OnInit {
       },
     });
   }
-  
-  handleUpdateLimit(data: Limit): void {}
+
+  handleUpdateLimit(data: Limit): void { 
+    if (this.isSaving) return;
+    this.isSaving = true;
+
+    this.api.updateLimit(data).subscribe({
+      next: () => {
+        this.reload();
+        this.isLimitModalOpen = false;
+        this.isSaving = false;
+        this.editedLimit = null;
+        this.cdr.detectChanges();
+      },
+      error: (e) => {
+        console.error('UPDATE LIMIT ERROR:', e);
+        alert('An error occurred while updating the limit.');
+        this.isSaving = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
 
   changeSideContent(): void {
     if (this.sideContent === 'limits') {
@@ -229,11 +287,68 @@ export class MainView implements OnInit {
     this.isDeleteConfirmationOpen = true;
   }
 
-  handleDeleteTransaction(transactionId: string): void {}
+  handleDeleteTransaction(transactionId: string): void { 
+    if (this.isDeleting) return;
+    this.isDeleting = true;
 
-  handleDeleteLimit(limitId: string): void {}
+    this.api.deleteTransaction(transactionId).subscribe({
+      next: () => {
+        this.reload();
+        this.isDeleteConfirmationOpen = false;
+        this.isDeleting = false;
+        this.deletedTransaction = null;
+        this.cdr.detectChanges();
+      },
+      error: (e) => {
+        console.error('DELETE TRANSACTION ERROR:', e);
+        alert('An error occurred while deleting the transaction.');
+        this.isDeleting = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
-  handleDeleteCategory(categoryId: string): void {}
+  handleDeleteLimit(limitId: string): void {
+    if (this.isDeleting) return;
+    this.isDeleting = true;
+
+    this.api.deleteLimit(limitId).subscribe({
+      next: () => {
+        this.reload();
+        this.isDeleteConfirmationOpen = false;
+        this.isDeleting = false;
+        this.deletedLimit = null;
+        this.cdr.detectChanges();
+      },
+      error: (e) => {
+        console.error('DELETE LIMIT ERROR:', e);
+        alert('An error occurred while deleting the limit.');
+        this.isDeleting = false;
+        this.cdr.detectChanges();
+      },
+    });
+   }
+
+  handleDeleteCategory(categoryId: string): void {
+    if (this.isDeleting) return;
+    this.isDeleting = true;
+
+    this.api.deleteCategory(categoryId).subscribe({
+      next: () => {
+        this.reload();
+        this.isDeleteConfirmationOpen = false;
+        this.isDeleting = false;
+        this.deletedCategory = null;
+        this.cdr.detectChanges();
+      },
+      error: (e) => {
+        console.error('DELETE CATEGORY ERROR:', e);
+        alert('An error occurred while deleting the category.');
+        this.isDeleting = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   closeDeleteConfirmation(): void {
     if (!this.isDeleting) {
