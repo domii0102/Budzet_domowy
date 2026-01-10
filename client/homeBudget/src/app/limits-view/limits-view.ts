@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ElementRef, HostListener } from '@angular/core';
 import { Limit } from '../../models/Limit';
 import { Category } from '../../models/Category';
 
@@ -14,17 +14,29 @@ export class LimitsView {
   update = output<string>();
   delete = output<string>();
   options: number = 0;
+  constructor(private eRef: ElementRef) {}
 
+  @HostListener('document:click', ['$event'])
+  clickout(event: Event) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      if (this.options === 1) {
+        console.log('Clicked outside - closing options');
+        this.options = 0;
+      }
+    }
+  }
   getCategory(id: string): Category | undefined {
     return this.categories().find((c: Category) => c._id === id);
   }
 
   onUpdate(limitId: string) {
     this.update.emit(limitId);
+    this.options = 0;
   }
 
   onDelete(limitId: string) {
     this.delete.emit(limitId);
+    this.options = 0;
   }
 
    changeOptionsVisibility() {

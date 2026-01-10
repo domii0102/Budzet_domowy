@@ -5,23 +5,25 @@
         @if (isTransaction()) {
         <h5>Are you sure you want to delete this transaction?</h5>
         <article>
+            <label>Name:</label>
             <div class="card-title">{{ transaction()?.name }}</div>
-
+            <label>Date:</label>
             <div class="muted">
-                Date: {{ transaction()?.date ? (transaction()?.date |
+                {{ transaction()?.date ? (transaction()?.date |
                 date:'dd.MM.yyyy') :
                 '-' }}
             </div>
-
+            <label>Price:</label>
             <div class="price">${{ transaction()?.value }}</div>
 
+            <label>Category:</label>
             <div class="muted">
-                Category: {{ getCategory(transaction()?.category_id)?.name || '-' }}
+                {{ getCategory(transaction()?.category_id)?.name || '-' }}
             </div>
-
             @if (transaction()?.description) {
+            <label>Description:</label>
             <div class="muted">
-                Description: {{ transaction()?.description }}
+                {{ transaction()?.description }}
             </div>
             }
         </article>
@@ -29,19 +31,23 @@
 
         @if (isCategory()) {
         <h5>Are you sure you want to delete this category?</h5>
+        <label>Name:</label>
         <div class="category-name">
             {{ category()?.name || '-' }}
         </div>
+        <label>Color:</label>
         <div class="color-square"
             [style.background]="category()?.color || '#4aa3ff'"></div>
         }
 
         @if (isLimit()) {
         <h5>Are you sure you want to delete this limit?</h5>
+        <label>Name:</label>
         <div class="limit-name">
             {{ getCategory(limit()?.category_id)?.name || '-' }}
         </div>
-        <div class="limit-value">${{ limit()?.value }}</div>
+        <label>Value:</label>
+        <div class="limit-value"> ${{ limit()?.value }}</div>
         }
 
         <div class="actions">

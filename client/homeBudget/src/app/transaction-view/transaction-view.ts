@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ElementRef, HostListener } from '@angular/core';
 import {Transaction} from '../../models/Transaction';
 import { Category } from '../../models/Category';
 import { DatePipe } from '@angular/common';
@@ -16,12 +16,25 @@ export class TransactionView {
   delete = output<string>();
   options: number = 0;
 
+  constructor(private eRef: ElementRef) {}
+
+  @HostListener('document:click', ['$event'])
+  clickout(event: Event) {
+    if (!this.eRef.nativeElement.contains(event.target)) {
+      if (this.options === 1) {
+        console.log('Clicked outside - closing options');
+        this.options = 0;
+      }
+    }
+  }
   onUpdate() {
     this.update.emit(this.transaction()._id);
+    this.options = 0;
   };
   
   onDelete() {
     this.delete.emit(this.transaction()._id);
+    this.options = 0;
   };
 
   changeOptionsVisibility() {

@@ -29,13 +29,33 @@ h2 {
   color: #333;
   text-align: center;
 }
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+h5 {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+  color: #333;
 }
-
+label {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #555;
+}
+.form-group {
+  display: flex;        
+  flex-direction: column;    
+  gap: 0.5rem;    
+}
+.card-title {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+.price {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+.muted {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
 button {
   padding: 10px 20px;
   border: none;
@@ -57,4 +77,20 @@ button:hover {
 .btn-cancel {
   background-color: #eee;
   color: #333;
+}
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+.color-square {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px; 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
 }
